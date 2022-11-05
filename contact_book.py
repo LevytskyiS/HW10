@@ -3,8 +3,8 @@ from collections import UserDict
 
 class AddressBook(UserDict):
 
-    def add_record(self):
-        self.data[Record.name.value] = Record.phone
+    def add_record(self, record):
+        self.data[record.name.value] = record
 
     def search_by_name(self):
         pass
@@ -17,45 +17,52 @@ class AddressBook(UserDict):
 
 
 class Field:
-    pass
+    def __init__(self, value) -> None:
+        self.value = value
 
 
 class Name(Field):
-
-    def __init__(self, value) -> None:
-        self.value = value
-        super().__init__()
+    pass
 
 
 class Phone(Field):
-    
-    phone = []
-    email = []
+    pass
 
+class Record:
 
-class Record(AddressBook):
-
-    name = ''
-    phone = Phone.phone
+    list_of_obj_of_phone = []
 
     def __init__(self, name) -> None:
-        self.name = name
-        Record.name = self.name
+        self.name = Name(name)
             
-    def add_new_unnecessary_field(self):
-        pass
+    def add_new_phone(self, phone):
+        self.phone = Phone(phone)
+        self.list_of_obj_of_phone.append(self.phone)
  
-    def change_unnecessary_field(self):
-        pass
+    def change_phone(self, phone, new_phone):
+        self.phone = Phone(phone)
+        self.new_phone = Phone(new_phone)
+        for index, number in enumerate(self.list_of_obj_of_phone):
+            if number.value == self.phone.value:
+                Record.list_of_obj_of_phone[index] = self.new_phone
+            else:
+                print(f'The phone {self.phone.value} doesn`t exist')
 
-    def delete_unnecessary_contact(self):
-        pass
-
+    def delete_phone(self, phone):
+        self.phone = Phone(phone)
+        for number in self.list_of_obj_of_phone:
+            if self.phone.value == number.value:
+                Record.list_of_obj_of_phone.remove(number)
+            else:
+                print(f'The number {self.phone.value} cannot be deleted, cause it doesn`t exist.')
 
 ab = AddressBook()
-contact_1 = Name('Mark')
-record_1 = Record(contact_1)
-phone_contact_1 = Phone.phone.append(324)
-record_1.phone = phone_contact_1
-ab.add_record()
-print(ab.data)
+
+user = Record('Mark')
+user.add_new_phone(456)
+user.change_phone(456, 222)
+user.delete_phone(222)
+
+ab.add_record(user)
+for key, value in ab.data.items():
+    print(key, value.phone.value)
