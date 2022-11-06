@@ -5,13 +5,20 @@ class AddressBook(UserDict):
 
     def add_record(self, record):
         self.data[record.name.value] = record
+        return f'New contact was added successfuly.'
 
     def search_by_name(self, record):
-        return f'{self.data[record.name.value]}'
+        if len(record.list_of_obj_of_phone) >= 1:
+            return [num.value for num in record.list_of_obj_of_phone]
+        else: 
+            return f'This guy doesn`t have a number.'
     
     def show_all_contacts(self):
-        return '\n'.join(f'{k} - {v.phone.value}' for k, v in self.data.items())
-
+        res = []
+        for key, value in self.data.items():
+            res.append(key)
+            res.append([num.value for num in value.list_of_obj_of_phone])
+        return res
 
 class Field:
     def __init__(self, value) -> None:
@@ -35,19 +42,23 @@ class Record:
     def add_new_phone(self, phone):
         self.phone = Phone(phone)
         self.list_of_obj_of_phone.append(self.phone)
-
+        return f'The phone was added.'
+        
     def change_phone(self, phone, new_phone):
-        print(len(self.list_of_obj_of_phone))
-        if phone in self.list_of_obj_of_phone:
-            phone = Phone(new_phone)
-            return f'The number was changed successfuly.'
-        else:
-            return f'This number {phone} doesn`t belong to this contact.'
+        self.phone = phone
+        self.new_phone = Phone(new_phone)
+        for index, number in (enumerate(self.list_of_obj_of_phone)):
+            if number.value == self.phone:
+                self.list_of_obj_of_phone[index] = self.new_phone
+                return f'The number was changed.'
+            else:
+                return f'The number {phone} doesn`t exist in your book.'
 
     def delete_phone(self, phone):
+        self.phone = phone
         for number in self.list_of_obj_of_phone:
-            if phone == number.value:
+            if self.phone == number.value:
                 self.list_of_obj_of_phone.remove(number)
                 return f'The number was deleted successfully.'
             else:
-                print(f'The number {self.phone.value} cannot be deleted, cause it doesn`t exist.')
+                return f'The number {self.phone} cannot be deleted, cause it doesn`t exist.'

@@ -1,5 +1,13 @@
 from contact_book import AddressBook, Record
 
+'''
+    Additional info to some commands:
+        'addnum': command + name + new number
+        'change' : command + name + existing number + new number
+        'delnum' : command + name + existaing number
+
+'''
+
 def decor(func):
     def wrapper(arg):
         try:
@@ -29,49 +37,41 @@ def contact_book(*_):
 def new_contact(list_name_number : list):
     record = Record(list_name_number[0].capitalize())
     record.add_new_phone(int(list_name_number[1]))
-    address_book.add_record(record)
-    return 'Contact was added to the Address Book sucessfuly.'
+    return address_book.add_record(record)
+
+@decor
+def add_new_phone_to_contact(list_number_to_add):
+    record = address_book[list_number_to_add[0].capitalize()]
+    return record.add_new_phone(int(list_number_to_add[1]))
+    
 
 @decor
 def change_contact(list_available_name_and_new_number: list):
-
-    record = Record(list_available_name_and_new_number[0].capitalize())
-    print(list_available_name_and_new_number)
-    if record.name.value in address_book.keys():
-        return record.change_phone(int(list_available_name_and_new_number[1]), int(list_available_name_and_new_number[2]))
-    else:
-        return 'Name not found.'
-
+    record = address_book[list_available_name_and_new_number[0].capitalize()]
+    return record.change_phone(int(list_available_name_and_new_number[1]), int(list_available_name_and_new_number[2]))
+    
 @decor 
 def phone_number(name_in_book: list):
-    record = Record(name_in_book[0].capitalize())
-    if record.name.value in address_book.keys():
-        return address_book.search_by_name(record)
-    else:
-        return 'This name is not found in your contacts.'
+    record = address_book[name_in_book[0].capitalize()]
+    return address_book.search_by_name(record)
 
 @decor
-def delete_number(number_to_delete: list): 
-    record = Record(number_to_delete[0].capitalize())
-    if record.name.value in address_book.keys():
-        return record.delete_phone(int(number_to_delete[1]))
-    else: 
-        return 'The contact doesn`t exist at all.'    
-
+def del_num_from_contact(number_to_be_deleted: list):
+    record = address_book[number_to_be_deleted[0].capitalize()]
+    return record.delete_phone(int(number_to_be_deleted[1]))
 
 FUNCTIONS = {
     'hello' : greeting, 
     'add' : new_contact,
+    'addnum': add_new_phone_to_contact,
     'change' : change_contact,
-    'phone' : phone_number,
+    'phone' : phone_number, 
+    'delnum' : del_num_from_contact,
     'show all' : contact_book,
-    'deletenum' : delete_number, # Name + number are needed
     'good bye' : exit_func,
     'exit' : exit_func,
     'close' : exit_func,
 }
-
-all_contact = {'Anna' : 321} # Dict was added for testing
 
 address_book = AddressBook()
 
