@@ -45,11 +45,11 @@ class Record:
         
     def change_phone(self, phone, new_phone):
         for index, number in (enumerate(self.list_of_obj_of_phone)):
-            if number == phone:
+            if phone == number:
                 self.list_of_obj_of_phone[index] = new_phone
                 return f'The number was changed.'
             else:
-                continue
+                return f'The number {phone} isn`t in your book.'
 
     def delete_phone(self, phone):
         for number in self.list_of_obj_of_phone:
@@ -57,4 +57,4 @@ class Record:
                 self.list_of_obj_of_phone.remove(number)
                 return f'The number was deleted successfully.'
             else:
-                continue
+                return f'The number {phone} isn`t in your book.'
